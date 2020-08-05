@@ -20,9 +20,8 @@ RUN apt-get update && \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    useradd -m -d /ansible ansible
-
-RUN pip3 --no-cache-dir install ansible
+    useradd -m -d /ansible ansible && \
+    pip3 --no-cache-dir install ansible
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
