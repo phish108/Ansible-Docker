@@ -1,9 +1,11 @@
-FROM ubuntu:eoan
+FROM ubuntu:focal
 
 LABEL maintainer="phish108 <info@mobinaut.io>"
-LABEL version="1.0.1"
+LABEL version="1.0.4"
 
 USER root
+
+COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
@@ -20,18 +22,16 @@ RUN apt-get update && \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    useradd -m -d /ansible ansible
-
-RUN pip3 --no-cache-dir install ansible
-
-COPY docker-entrypoint.sh /usr/local/bin/
-
-RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
+    useradd -m -d /ansible ansible && \
+    pip3 --no-cache-dir install ansible && \
+    chmod 755 /usr/local/bin/docker-entrypoint.sh 
 
 WORKDIR /ansible
 
 USER ansible
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+RUN  mkdir -p /ansible/.ssh
+
+# ENTRYPOINT ["docker-entrypoint.sh"]
 
 # CMD ["bash"]
