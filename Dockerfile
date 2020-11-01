@@ -1,7 +1,7 @@
 FROM ubuntu:focal
 
 LABEL maintainer="phish108 <info@mobinaut.io>"
-LABEL version="1.0.4"
+LABEL version="2.10.2"
 
 USER root
 
