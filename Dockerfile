@@ -1,7 +1,7 @@
 FROM ubuntu:focal
 
 LABEL maintainer="phish108 <info@mobinaut.io>"
-LABEL version="2.10.2"
+LABEL version="2.10.3"
 
 USER root
 
@@ -15,6 +15,7 @@ RUN apt-get update && \
     less \
     vim-tiny \
     curl \
+    iputils-ping \
     python3 \
     python3-wheel \
     python3-pip \
