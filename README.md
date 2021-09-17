@@ -2,7 +2,7 @@
 
 A small container provides the latest ansible runtime for immediate use.
 
-### SYNOPSIS
+### SYNOPSIS
 
 ```
 docker run -it --rm -v ~/.ssh:/sshkeys -v my_inventory:/ansible phish108/ansible:latest
@@ -16,7 +16,7 @@ or run ansible commands directly
 docker run -it --rm -v ~/.ssh:/sshkeys -v my_inventory:/ansible phish108/ansible:latest all myplaybook.yml
 ```
 
-### Remarks 
+### Remarks 
 
 This container is based on ubuntu 19.10 (eoan) and comes with a minimal setup that includes ansible plus a few useful tools. 
 
