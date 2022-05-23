@@ -38,6 +38,7 @@ then
     fi
 
     # echo call ansible with $INVENTORY and $PLAYBOOK
+    # FIXME: Drop -K again as it always asks for the password, which makes headless updates impossible
     exec "ansible-playbook" "-K" "-i" "$INVENTORY" "$PLAYBOOK"
 fi
 
