@@ -13,12 +13,16 @@ To enter the shell (starts into bash).
 or run ansible commands directly 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v my_inventory:/ansible phish108/ansible:latest all myplaybook.yml
+docker run -it --rm -v ~/.ssh:/sshkeys -v my_inventory:/ansible phish108/ansible:latest -i myinventory.yml myplaybook.yml
 ```
+
+### Autorunning 
+
+If you organise your playbooks that the inventory file is named ``inventory.yaml`` and the playbook is named ``playbook.yaml``, then these files are taken up automatically. Any other naming convention will not be automatically executed. 
 
 ### Remarks 
 
-This container is based on ubuntu 19.10 (eoan) and comes with a minimal setup that includes ansible plus a few useful tools. 
+This container is based on ubuntu 22.04 (jammy) and comes with a minimal setup that includes ansible plus a few useful tools. 
 
 If run directly ansible expects to find the inventroy in the ```/ansible``` folder. 
 
@@ -26,9 +30,7 @@ You can include your private keys in the ```/sshkeys``` or the ```/ansible/keys`
 
 ### Included tools for better handling
 
-* vi (from vim-tiny)
 * git 
-* less
 * curl
 
 ## Building the container from scratch
