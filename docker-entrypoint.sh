@@ -16,9 +16,29 @@ then
 fi
 
 # if nothing is provided then enter the command line
+
 if [[ -z "$@" ]]
 then
-    exec "bash"
+    PLAYBOOK=
+    INVENTORY=
+
+    if [[ -f /ansible/inventory.yaml ]]
+    then
+        INVENTORY=/ansible/inventory.yaml
+    fi
+
+    if [[ -f /ansible/playbook.yaml ]]
+    then
+        PLAYBOOK=/ansible/playbook.yaml
+    fi
+
+    if [[ -z $PLAYBOOK ]]
+    then
+        exec "bash"
+    fi
+
+    # echo call ansible with $INVENTORY and $PLAYBOOK
+    exec "ansible-playbook" "-i" "$INVENTORY" "$PLAYBOOK"
 fi
 
 # otherwise run ansible directly

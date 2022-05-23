@@ -5,17 +5,15 @@ LABEL version="5.8.0"
 
 USER root
 
-COPY docker-entrypoint.sh /usr/local/bin/
-
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --no-install-recommends \
     openssh-client \
     git \
     less \
-    vim-tiny \
+    # vim-tiny \
     curl \
-    iputils-ping \
+    # iputils-ping \
     python3 \
     python3-wheel \
     python3-pip \
@@ -23,8 +21,11 @@ RUN apt-get update && \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    useradd -m -d /ansible ansible && \
-    pip3 --no-cache-dir install ansible && \
+    pip3 --no-cache-dir install ansible 
+
+COPY docker-entrypoint.sh /usr/local/bin/
+
+RUN useradd -m -d /ansible ansible && \
     chmod 755 /usr/local/bin/docker-entrypoint.sh 
 
 WORKDIR /ansible
