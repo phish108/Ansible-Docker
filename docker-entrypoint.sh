@@ -38,7 +38,7 @@ then
     fi
 
     # echo call ansible with $INVENTORY and $PLAYBOOK
-    exec "ansible-playbook" "-i" "$INVENTORY" "$PLAYBOOK"
+    exec "ansible-playbook" "-K" "-i" "$INVENTORY" "$PLAYBOOK"
 fi
 
 # otherwise run ansible directly
