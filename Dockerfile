@@ -1,7 +1,7 @@
-FROM ubuntu:focal
+FROM ubuntu:22.04
 
 LABEL maintainer="phish108 <info@mobinaut.io>"
-LABEL version="3.2.0"
+LABEL version="5.8.0"
 
 USER root
 
@@ -33,6 +33,6 @@ USER ansible
 
 RUN  mkdir -p /ansible/.ssh
 
-# ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # CMD ["bash"]
