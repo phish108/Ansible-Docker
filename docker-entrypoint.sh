@@ -15,23 +15,23 @@ then
     ssh-add `find /ansible/keys/* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
 fi
 
-# if nothing is provided then enter the command line
+INVENTORY=
+
+if [[ -f /ansible/inventory.yaml ]]
+then
+    INVENTORY=/ansible/inventory.yaml
+fi
 
 if [[ -z "$@" ]]
 then
     PLAYBOOK=
-    INVENTORY=
-
-    if [[ -f /ansible/inventory.yaml ]]
-    then
-        INVENTORY=/ansible/inventory.yaml
-    fi
 
     if [[ -f /ansible/playbook.yaml ]]
     then
         PLAYBOOK=/ansible/playbook.yaml
     fi
 
+    # if nothing is provided then enter the command line
     if [[ -z $PLAYBOOK ]]
     then
         exec "bash"
@@ -40,6 +40,12 @@ then
     # echo call ansible with $INVENTORY and $PLAYBOOK
     # FIXME: Drop -K again as it always asks for the password, which makes headless updates impossible
     exec "ansible-playbook" "-K" "-i" "$INVENTORY" "$PLAYBOOK"
+fi
+
+# In case we have an inventory, we use it 
+if [[ ! -z $INVENTORY ]] 
+then
+    exec "ansible-playbook" -i "$INVENTORY" "$@"
 fi
 
 # otherwise run ansible directly
