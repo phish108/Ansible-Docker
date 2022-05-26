@@ -5,7 +5,7 @@ A small container provides the latest ansible runtime for immediate use.
 ### SYNOPSIS
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v my_inventory:/ansible phish108/ansible:latest
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible phish108/ansible:latest
 ```
 
 To enter the shell (starts into bash).
@@ -13,12 +13,18 @@ To enter the shell (starts into bash).
 or run ansible commands directly 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v my_inventory:/ansible phish108/ansible:latest -i myinventory.yml myplaybook.yml
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible phish108/ansible:latest -i myinventory.yml myplaybook.yml
 ```
 
 ### Autorunning 
 
 If you organise your playbooks that the inventory file is named ``inventory.yaml`` and the playbook is named ``playbook.yaml``, then these files are taken up automatically. Any other naming convention will not be automatically executed. 
+
+The container always includes ``inventory.yaml`` if present. This allows to call the container as such: 
+
+```
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible phish108/ansible:latest myplaybook.yml myotherplaybook.yml
+```
 
 ### Remarks 
 
