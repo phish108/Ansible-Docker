@@ -22,6 +22,12 @@ then
     INVENTORY=/ansible/inventory.yaml
 fi
 
+# This is very handy because the inventory is private and the playbook can be public most of the time. 
+if [[ -d /inventory ]]
+then    
+    INVENTORY=/inventory
+fi
+
 if [[ -z "$@" ]]
 then
     PLAYBOOK=
