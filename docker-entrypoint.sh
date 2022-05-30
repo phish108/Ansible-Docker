@@ -23,18 +23,18 @@ then
 fi
 
 # This is very handy because the inventory is private and the playbook can be public most of the time. 
-if [[ -d /inventory ]]
+if [[ -d /inventory -a -f /inventory/main.yaml ]]
 then    
-    INVENTORY=/inventory
+    INVENTORY=/inventory/main.yaml
 fi
 
 if [[ -z "$@" ]]
 then
     PLAYBOOK=
 
-    if [[ -f /ansible/playbook.yaml ]]
+    if [[ -f /ansible/main.yaml ]]
     then
-        PLAYBOOK=/ansible/playbook.yaml
+        PLAYBOOK=/ansible/main.yaml
     fi
 
     # if nothing is provided then enter the command line
@@ -44,15 +44,14 @@ then
     fi
 
     # echo call ansible with $INVENTORY and $PLAYBOOK
-    # FIXME: Drop -K again as it always asks for the password, which makes headless updates impossible
     exec "ansible-playbook" "-K" "-i" "$INVENTORY" "$PLAYBOOK"
 fi
 
 # In case we have an inventory, we use it 
 if [[ ! -z $INVENTORY ]] 
 then
-    exec "ansible-playbook" -i "$INVENTORY" "$@"
+    exec "ansible-playbook" $SSH_EXT_HOSTS -i "$INVENTORY" "$@"
 fi
 
 # otherwise run ansible directly
-exec "ansible-playbook" "$@"
+exec "ansible" "$@"

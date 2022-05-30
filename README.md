@@ -13,7 +13,7 @@ To enter the shell (starts into bash).
 or run ansible commands directly 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible phish108/ansible:latest -i myinventory.yml myplaybook.yml
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible phish108/ansible:latest -K myplaybook.yml
 ```
 
 ### Autorunning 
