@@ -40,7 +40,7 @@ jobs:
           # Shouldn't this be github.GITHUB_TOKEN?
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
-        id: caddyhelper_build # you'll use this in the next step
+        id: image_builder # you'll use this in the next step
         uses: docker/metadata-action@v3
         with:
           # list of Docker images to use as base name for tags
@@ -61,6 +61,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.caddyhelper_build.outputs.tags }}
-          labels: ${{ steps.caddyhelper_build.outputs.labels }}
+          tags: ${{ steps.image_builder.outputs.tags }}
+          labels: ${{ steps.image_builder.outputs.labels }}
             
