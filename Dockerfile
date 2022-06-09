@@ -20,13 +20,13 @@ RUN apt-get update && \
     python3-pip \
     python3-setuptools \
     # Ubuntu ships an old ansible version (2.10.8 aka 3.8 vs. 2.12 aka 5.8) 
-    ansible \
+    # ansible \
     && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* 
-    # && \
+    rm -rf /var/lib/apt/lists/* \
+    && \
     # fetch latest version of ansible via pip3 fails for arm platforms
-    # pip3 --no-cache-dir install ansible 
+    pip3 --no-cache-dir install ansible 
 
 COPY docker-entrypoint.sh /usr/local/bin/
 

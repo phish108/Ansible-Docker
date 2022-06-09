@@ -23,7 +23,7 @@ then
 fi
 
 # This is very handy because the inventory is private and the playbook can be public most of the time. 
-if [[ -d /inventory -a -f /inventory/main.yaml ]]
+if [ -d /inventory ] && [ -f /inventory/main.yaml ]
 then    
     INVENTORY=/inventory/main.yaml
 fi
