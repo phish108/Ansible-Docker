@@ -5,7 +5,7 @@ A small container provides the latest ansible runtime for immediate use.
 ### SYNOPSIS
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible phish108/ansible:latest
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible ghcr.io/phish108/ansible:latest
 ```
 
 To enter the shell (starts into bash).
@@ -13,7 +13,7 @@ To enter the shell (starts into bash).
 or run ansible commands directly 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible phish108/ansible:latest -K myplaybook.yml
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible:latest -K myplaybook.yml
 ```
 
 ### Autorunning 
@@ -23,7 +23,7 @@ If you organise your playbooks that the inventory file is named ``inventory.yaml
 The container always includes ``inventory.yaml`` if present. This allows to call the container as such: 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible phish108/ansible:latest myplaybook.yml myotherplaybook.yml
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible ghcr.io/phish108/ansible:latest myplaybook.yml myotherplaybook.yml
 ```
 
 ### Remarks 
@@ -43,7 +43,7 @@ You can include your private keys in the ```/sshkeys``` or the ```/ansible/keys`
 
 ```
 docker build \
-       -t phish108/ansible:latest \
-       -t phish108/ansible:${ANSIBLE_VERSION} \
-       -t phish108/ansible:${ANSIBLE_VERSION}-20200106 .
+       -t ghcr.io/phish108/ansible:latest \
+       -t ghcr.io/phish108/ansible:${ANSIBLE_VERSION} \
+       -t ghcr.io/phish108/ansible:${ANSIBLE_VERSION}-20200106 .
 ```
