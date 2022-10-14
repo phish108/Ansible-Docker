@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
-LABEL maintainer="phish108 <info@mobinaut.io>"
-LABEL version="5.9.0"
+LABEL maintainer="phish108 <cpglahn@gmail.com>"
+LABEL version="6.1.0"
 LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
 
 USER root
