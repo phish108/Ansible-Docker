@@ -29,6 +29,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* \
     && \
+    mkdir -p /ansible \
+    && \
     # python3 -m pip install --no-cache-dir --upgrade pip && \
     # python3 -m pip install --no-cache-dir --upgrade setuptools && \
     # fetch latest version of ansible via pip3 fails for arm platforms
@@ -37,6 +39,7 @@ RUN apt-get update && \
 COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN useradd -m -d /ansible ansible && \
+    chown ansible /ansible && \
     chmod 755 /usr/local/bin/docker-entrypoint.sh 
 
 WORKDIR /ansible
