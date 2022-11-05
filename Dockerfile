@@ -21,6 +21,7 @@ RUN apt-get update && \
     python3-dev \
     python3-wheel \
     python3-pip \
+    python3-jmespath \
     # The next line appears to have no effect.
     python3-setuptools \
     # Ubuntu ships an old ansible version (2.10.8 aka 3.8 vs. 2.12 aka 5.8) 
@@ -45,8 +46,6 @@ RUN useradd -m -d /ansible ansible && \
 WORKDIR /ansible
 
 USER ansible
-
-RUN  mkdir -p /ansible/.ssh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
