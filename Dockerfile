@@ -22,6 +22,7 @@ RUN apt-get update && \
     python3-wheel \
     python3-pip \
     python3-jmespath \
+    python3-yaml \
     # The next line appears to have no effect.
     python3-setuptools \
     python-is-python3 \
