@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 LABEL maintainer="phish108 <cpglahn@gmail.com>"
-LABEL version="6.1.0"
+LABEL version="7.1.2"
 LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
 
 USER root
@@ -32,13 +32,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* \
     && \
-    mkdir -p /ansible \
-    && \
-    # python3 -m pip install --no-cache-dir --upgrade pip && \
-    # python3 -m pip install --no-cache-dir --upgrade setuptools && \
-    # fetch latest version of ansible via pip3 fails for arm platforms
-    python3 -m pip --no-cache-dir install ansible 
+    mkdir -p /ansible 
 
+    
 COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN useradd -m -d /ansible ansible && \
@@ -48,6 +44,13 @@ RUN useradd -m -d /ansible ansible && \
 WORKDIR /ansible
 
 USER ansible
+
+# pip sollte unter dem nutzer und nicht als root ausgeführt werden. 
+RUN python3 -m pip --no-cache-dir install ansible 
+
+    # python3 -m pip install --no-cache-dir --upgrade pip && \
+    # python3 -m pip install --no-cache-dir --upgrade setuptools && \
+    # fetch latest version of ansible via pip3 fails for arm platforms
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
