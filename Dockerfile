@@ -24,6 +24,7 @@ RUN apt-get update && \
     python3-jmespath \
     # The next line appears to have no effect.
     python3-setuptools \
+    python-is-python3 \
     # Ubuntu ships an old ansible version (2.10.8 aka 3.8 vs. 2.12 aka 5.8) 
     # ansible \
     && \
