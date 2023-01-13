@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+PATH=/ansible/.local/bin:$PATH
+
 # Solution from: https://stackoverflow.com/questions/18880024/start-ssh-agent-on-login
 eval $(ssh-agent | sed 's/^echo/#echo/')
 
