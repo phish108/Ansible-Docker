@@ -21,7 +21,7 @@ RUN apt-get update && \
     python3-dev \
     python3-wheel \
     python3-pip \
-    python3-jmespath \
+    # python3-jmespath \
     python3-yaml \
     # The next line appears to have no effect.
     python3-setuptools \
@@ -46,7 +46,7 @@ WORKDIR /ansible
 USER ansible
 
 # pip sollte unter dem nutzer und nicht als root ausgeführt werden. 
-RUN python3 -m pip --no-cache-dir install ansible 
+RUN python3 -m pip --no-cache-dir install ansible jmespath
 
     # python3 -m pip install --no-cache-dir --upgrade pip && \
     # python3 -m pip install --no-cache-dir --upgrade setuptools && \
