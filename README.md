@@ -5,15 +5,29 @@ A small container provides the latest ansible runtime for immediate use.
 ### SYNOPSIS
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible ghcr.io/phish108/ansible:latest
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_playbook_inventory}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1
 ```
+
+This assumes that there is a `main.yaml` file in the playbook volume that contains all relevant information about your play.
 
 To enter the shell (starts into bash).
 
 or run ansible commands directly 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible:latest -K myplaybook.yml
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1 myplaybook.yml
+```
+
+To force to ask for the become password add ansible's `-K` option: 
+
+```
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1 myplaybook.yml
+```
+
+Limiting to specific inventory groups, use ansible's `-l` option.
+
+```
+docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1 -l testing myplaybook.yml
 ```
 
 ### Autorunning 
