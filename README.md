@@ -2,6 +2,8 @@
 
 A small container provides the latest ansible runtime for immediate use.
 
+The container runs natively on intel/amd64 and arm64 (such as Raspberry Pi or Apple Silicon) systems.
+
 ### SYNOPSIS
 
 ```
