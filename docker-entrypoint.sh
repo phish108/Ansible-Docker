@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-PATH=/ansible/.local/bin:$PATH
-
 # Solution from: https://stackoverflow.com/questions/18880024/start-ssh-agent-on-login
 eval $(ssh-agent | sed 's/^echo/#echo/')
 
@@ -42,7 +40,7 @@ then
     # if nothing is provided then enter the command line
     if [[ -z $PLAYBOOK ]]
     then
-        exec "bash"
+        exec "/bin/bash"
     fi
 
     # echo call ansible with $INVENTORY and $PLAYBOOK
@@ -52,7 +50,7 @@ fi
 # In case we have an inventory, we use it 
 if [[ ! -z $INVENTORY ]] 
 then
-    exec "ansible-playbook" $SSH_EXT_HOSTS -i "$INVENTORY" "$@"
+    exec "ansible-playbook" -i "$INVENTORY" "$@"
 fi
 
 # otherwise run ansible directly

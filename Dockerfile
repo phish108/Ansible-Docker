@@ -1,10 +1,12 @@
 FROM ubuntu:22.04
 
 LABEL maintainer="phish108 <cpglahn@gmail.com>"
-LABEL version="2.14.1-01"
+LABEL version="7.1.0-02"
 LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
 
 USER root
+
+COPY requirements.txt /tmp/requirements.txt
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
@@ -22,7 +24,7 @@ RUN apt-get update && \
     python3-wheel \
     python3-pip \
     # python3-jmespath \
-    python3-yaml \
+    # python3-yaml \
     # The next line appears to have no effect.
     python3-setuptools \
     python-is-python3 \
@@ -32,9 +34,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* \
     && \
-    mkdir -p /ansible 
+    mkdir -p /ansible && \
+    # run pip and to install the ansible and its dependencies
+    pip --no-cache-dir install -r /tmp/requirements.txt && \
+    rm -f /tmp/requirements.txt
 
-    
 COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN useradd -m -d /ansible ansible && \
@@ -44,9 +48,6 @@ RUN useradd -m -d /ansible ansible && \
 WORKDIR /ansible
 
 USER ansible
-
-# pip sollte unter dem nutzer und nicht als root ausgeführt werden. 
-RUN python3 -m pip --no-cache-dir install ansible jmespath
 
     # python3 -m pip install --no-cache-dir --upgrade pip && \
     # python3 -m pip install --no-cache-dir --upgrade setuptools && \
