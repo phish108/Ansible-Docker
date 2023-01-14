@@ -44,6 +44,11 @@ then
     fi
 
     # echo call ansible with $INVENTORY and $PLAYBOOK
+    if [[ -f /ansible/nobecome ]] 
+    then
+        exec "ansible-playbook" "-i" "$INVENTORY" "$PLAYBOOK"
+    fi
+
     exec "ansible-playbook" "-K" "-i" "$INVENTORY" "$PLAYBOOK"
 fi
 
