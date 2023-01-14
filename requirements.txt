@@ -1,3 +1,9 @@
 ansible==7.1.0
 PyYAML==6.0
+# needed for JsonPath queries
 jmespath==1.0.1
+# Helpers for password hashing filters 
+passlib==1.7.4
+bcrypt==4.0.1
+argon2-cffi==21.3.0
+cryptography==39.0.0
