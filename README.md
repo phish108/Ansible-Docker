@@ -5,40 +5,83 @@ A small container provides the latest ansible runtime for immediate use.
 ### SYNOPSIS
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_playbook_inventory}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1
+docker run -it --rm \
+    -v ~/.ssh:/sshkeys \
+    -v ${my_playbook_inventory}:/ansible \
+    ghcr.io/phish108/ansible-docker:v7.1.3-2
 ```
 
-This assumes that there is a `main.yaml` file in the playbook volume that contains all relevant information about your play.
+This assumes that there is a `main.yaml` file in the playbook volume that contains all relevant information about your play. See Section Autorunning below.
 
 To enter the shell (starts into bash).
 
 or run ansible commands directly 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1 myplaybook.yml
+docker run -it --rm \
+    -v ~/.ssh:/sshkeys \
+    -v ${my_inventory}:/inventory \
+    -v ${my_playbooks}:/ansible \
+    ghcr.io/phish108/ansible-docker:v7.1.3-1 \
+        myplaybook.yml
 ```
 
 To force to ask for the become password add ansible's `-K` option: 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1 myplaybook.yml
+docker run -it --rm \
+    -v ~/.ssh:/sshkeys \
+    -v ${my_inventory}:/inventory \
+    -v ${my_playbooks}:/ansible \
+    ghcr.io/phish108/ansible-docker:v7.1.3-1 \
+        -K myplaybook.yml
 ```
 
 Limiting to specific inventory groups, use ansible's `-l` option.
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/inventory -v ${my_playbooks}:/ansible ghcr.io/phish108/ansible-docker:v7.1.3-1 -l testing myplaybook.yml
+docker run -it --rm \
+           -v ~/.ssh:/sshkeys \
+           -v ${my_inventory}:/inventory \
+           -v ${my_playbooks}:/ansible \
+           ghcr.io/phish108/ansible-docker:v7.1.3-1 \
+              -l testing myplaybook.yml
 ```
 
 ### Autorunning 
 
 If you organise your playbooks that the inventory file is named ``inventory.yaml`` and the playbook is named ``playbook.yaml``, then these files are taken up automatically. Any other naming convention will not be automatically executed. 
 
-The container always includes ``inventory.yaml`` if present. This allows to call the container as such: 
+If the inventory and the playbooks are separated, then the container looks for the files `/inventory/main.yaml` and `/ansible/main.yaml` for autoplay, if no other options are provided.
+
+The container always includes ``inventory.yaml`` or ``/inventory/main.yaml``, if any of those is present. This allows to call the container as such: 
 
 ```
-docker run -it --rm -v ~/.ssh:/sshkeys -v ${my_inventory}:/ansible ghcr.io/phish108/ansible:latest myplaybook.yml myotherplaybook.yml
+docker run -it --rm \
+           -v ~/.ssh:/sshkeys \
+           -v ${my_inventory}:/ansible \
+           ghcr.io/phish108/ansible-docker:7.1.3-2  \
+               myplaybook.yml myotherplaybook.yml
 ```
+
+If `/ansible/main.yaml` or `/ansible/playbook.yaml` are present, then the container can be run without extra parameters.
+
+```
+docker run -it --rm \
+           -v ~/.ssh:/sshkeys \
+           -v ${my_inventory}:/ansible \
+           ghcr.io/phish108/ansible-docker:7.1.3-2 
+```
+
+When both files exists, then the container always uses `/ansible/main.yaml`.
+
+***IMPORTANT*** When autorunning, then it is not possible to pass extra parameters. 
+
+#### Avoid become password interaction
+
+While autorunning this container asks for the become password by default. If no become password is required, then add the file `nobecome` to the root of the playbook volume. This will cause the container not to use the `-K` flag on `ansible-playbook`. 
+
+The content of the file `nobecome` is irrelevant. The container just checks, if the file exists.
 
 ### Remarks 
 

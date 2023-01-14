@@ -32,10 +32,16 @@ if [[ -z "$@" ]]
 then
     PLAYBOOK=
 
-    if [[ -f /ansible/main.yaml ]]
-    then
-        PLAYBOOK=/ansible/main.yaml
-    fi
+    for FILE in "playbook main"
+    do
+        for EXT in "yml yaml"
+        do
+            if [[ -f "/ansible/${FILE}.${EXT}" ]]
+            then
+                PLAYBOOK="/ansible/${FILE}.${EXT}"
+            fi
+        done
+    done
 
     # if nothing is provided then enter the command line
     if [[ -z $PLAYBOOK ]]
