@@ -95,12 +95,3 @@ You can include your private keys in the ```/sshkeys``` or the ```/ansible/keys`
 
 * git 
 * curl
-
-## Building the container from scratch
-
-```
-docker build \
-       -t ghcr.io/phish108/ansible:latest \
-       -t ghcr.io/phish108/ansible:${ANSIBLE_VERSION} \
-       -t ghcr.io/phish108/ansible:${ANSIBLE_VERSION}-20200106 .
-```
