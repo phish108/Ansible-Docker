@@ -1,4 +1,4 @@
-## Ansible 
+## Ansible-Docker
 
 A small container provides the latest ansible runtime for immediate use.
 
@@ -89,9 +89,4 @@ This container is based on ubuntu 22.04 (jammy) and comes with a minimal setup t
 
 If run directly ansible expects to find the inventroy in the ```/ansible``` folder. 
 
-You can include your private keys in the ```/sshkeys``` or the ```/ansible/keys``` folder. All private keys in this folder will be added automatically to the ssh-agent for password free authentication. Note that if your private keys are password protected, you need to enter (all) your key passwords before the container runs.
-
-### Included tools for better handling
-
-* git 
-* curl
+You can include your private keys in the ```/sshkeys```, the ``/keys`` or the ```/ansible/keys``` folder. All private keys in this folder will be added automatically to the ssh-agent for password free authentication. Note that if your private keys are password protected, you need to enter (all) your key passwords before the container runs.
