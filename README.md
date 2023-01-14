@@ -83,10 +83,14 @@ While autorunning this container asks for the become password by default. If no 
 
 The content of the file `nobecome` is irrelevant. The container just checks, if the file exists.
 
-### Remarks 
-
-This container is based on ubuntu 22.04 (jammy) and comes with a minimal setup that includes ansible plus a few useful tools. 
-
 If run directly ansible expects to find the inventroy in the ```/ansible``` folder. 
 
-You can include your private keys in the ```/sshkeys```, the ``/keys`` or the ```/ansible/keys``` folder. All private keys in this folder will be added automatically to the ssh-agent for password free authentication. Note that if your private keys are password protected, you need to enter (all) your key passwords before the container runs.
+## SSH Key Handling
+
+You can include your private keys in the ```/sshkeys```, the ``/keys``, the ```/ansible/keys```, or the ``/inventory/keys`` folder. All private keys in this folder will be added automatically to the ssh-agent for password free authentication. 
+
+Note that if your private keys are password protected, you need to enter (all) your key passwords before the container runs. Therefore, it is recommended to have a separate folder with special deployment keys. 
+
+### Final Remarks 
+
+This container is based on ubuntu 22.04 (jammy) and comes with a minimal setup that includes ansible plus a few useful tools. 
