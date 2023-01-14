@@ -1,7 +1,9 @@
 FROM ubuntu:22.04
 
 LABEL maintainer="phish108 <cpglahn@gmail.com>"
-LABEL version="7.1.0-02"
+
+# Starting from Ansible Version > 7.1, this will use the dashed number to indicate the container build.
+LABEL version="7.1.3-4"
 LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
 
 USER root
@@ -12,15 +14,15 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --no-install-recommends \
     openssh-client \
-    git \
+    # iputils-ping \
+    # git \
     # less \
     # vim-tiny \
-    curl \
-    gcc \
+    # curl \
+    # gcc \
     libffi-dev \
-    # iputils-ping \
     python3 \
-    python3-dev \
+    # python3-dev \
     python3-wheel \
     python3-pip \
     # python3-jmespath \

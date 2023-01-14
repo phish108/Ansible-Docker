@@ -4,10 +4,17 @@ set -e
 # Solution from: https://stackoverflow.com/questions/18880024/start-ssh-agent-on-login
 eval $(ssh-agent | sed 's/^echo/#echo/')
 
+EXTS="YML YAML yml yaml"
+
 # automatically include any private keys that are provided in special volumes
 if [[ -d /sshkeys ]]
 then
-    ssh-add `find /sshkeys/id_* ! -name *.pub`
+    ssh-add `find /sshkeys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
+fi
+
+if [[ -d /keys ]]
+then
+    ssh-add `find /keys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
 fi
 
 if [[ -d /ansible/keys ]]
@@ -17,24 +24,38 @@ fi
 
 INVENTORY=
 
-if [[ -f /ansible/inventory.yaml ]]
-then
-    INVENTORY=/ansible/inventory.yaml
-fi
+FILES="/ansible/inventory /ansible/Inventory /ansible/INVENTORY"
 
-# This is very handy because the inventory is private and the playbook can be public most of the time. 
-if [ -d /inventory ] && [ -f /inventory/main.yaml ]
-then    
-    INVENTORY=/inventory/main.yaml
-fi
+if [[ -d /inventory ]]
+then
+    if [[ -d /inventory/keys ]]
+    then
+        ssh-add `find /inventory/keys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
+    fi
+
+    FILES="$FILES /inventory/Inventory /inventory/INVENTORY /inventory/inventory /inventory/MAIN /inventory/Main /inventory/main"
+fi 
+
+for FILE in $FILES
+do
+    for EXT in $EXTS
+    do
+        if [[ -f "${FILE}.$EXT" ]]
+        then
+            INVENTORY="${FILE}.$EXT"
+        fi
+    done
+done 
 
 if [[ -z "$@" ]]
 then
     PLAYBOOK=
 
-    for FILE in "playbook main"
+    PREFIX="PLAYBOOK MAIN Playbook Main playbook main"
+
+    for FILE in $PREFIX
     do
-        for EXT in "yml yaml"
+        for EXT in $EXTS
         do
             if [[ -f "/ansible/${FILE}.${EXT}" ]]
             then
@@ -61,7 +82,12 @@ fi
 # In case we have an inventory, we use it 
 if [[ ! -z $INVENTORY ]] 
 then
-    exec "ansible-playbook" -i "$INVENTORY" "$@"
+    if [[ -f /ansible/nobecome ]] 
+    then
+        exec "ansible-playbook" "-i" "$INVENTORY" "$@"
+    fi
+
+    exec "ansible-playbook" -K -i "$INVENTORY" "$@"
 fi
 
 # otherwise run ansible directly

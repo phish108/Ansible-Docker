@@ -8,7 +8,7 @@ A small container provides the latest ansible runtime for immediate use.
 docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_playbook_inventory}:/ansible \
-    ghcr.io/phish108/ansible-docker:v7.1.3-2
+    ghcr.io/phish108/ansible-docker:v7.1.3-4
 ```
 
 This assumes that there is a `main.yaml` file in the playbook volume that contains all relevant information about your play. See Section Autorunning below.
@@ -22,7 +22,7 @@ docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_inventory}:/inventory \
     -v ${my_playbooks}:/ansible \
-    ghcr.io/phish108/ansible-docker:v7.1.3-1 \
+    ghcr.io/phish108/ansible-docker:v7.1.3-4 \
         myplaybook.yml
 ```
 
@@ -33,7 +33,7 @@ docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_inventory}:/inventory \
     -v ${my_playbooks}:/ansible \
-    ghcr.io/phish108/ansible-docker:v7.1.3-1 \
+    ghcr.io/phish108/ansible-docker:v7.1.3-4 \
         -K myplaybook.yml
 ```
 
@@ -44,7 +44,7 @@ docker run -it --rm \
            -v ~/.ssh:/sshkeys \
            -v ${my_inventory}:/inventory \
            -v ${my_playbooks}:/ansible \
-           ghcr.io/phish108/ansible-docker:v7.1.3-1 \
+           ghcr.io/phish108/ansible-docker:v7.1.3-4 \
               -l testing myplaybook.yml
 ```
 
@@ -60,7 +60,7 @@ The container always includes ``inventory.yaml`` or ``/inventory/main.yaml``, if
 docker run -it --rm \
            -v ~/.ssh:/sshkeys \
            -v ${my_inventory}:/ansible \
-           ghcr.io/phish108/ansible-docker:7.1.3-2  \
+           ghcr.io/phish108/ansible-docker:7.1.3-4  \
                myplaybook.yml myotherplaybook.yml
 ```
 
@@ -70,7 +70,7 @@ If `/ansible/main.yaml` or `/ansible/playbook.yaml` are present, then the contai
 docker run -it --rm \
            -v ~/.ssh:/sshkeys \
            -v ${my_inventory}:/ansible \
-           ghcr.io/phish108/ansible-docker:7.1.3-2 
+           ghcr.io/phish108/ansible-docker:7.1.3-4
 ```
 
 When both files exists, then the container always uses `/ansible/main.yaml`.
