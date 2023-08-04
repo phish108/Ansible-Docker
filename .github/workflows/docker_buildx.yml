@@ -51,7 +51,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            phish108/Ansible
+            phish108/ansible
             ghcr.io/${{ github.repository }}
           # Docker tags based on the following events/attributes
           tags: |
