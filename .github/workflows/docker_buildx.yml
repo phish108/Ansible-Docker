@@ -43,7 +43,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
+          registry: hub.docker.com
           username: ${{ github.repository_owner }}
           # Shouldn't this be github.GITHUB_TOKEN?
           password: ${{ secrets.DOCKER_HUB }}
@@ -53,7 +53,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            ${{ github.repository }}
+            ${{ github.repository_owner }}/Ansible
             ghcr.io/${{ github.repository }}
           # Docker tags based on the following events/attributes
           tags: |
