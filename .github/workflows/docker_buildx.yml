@@ -39,12 +39,21 @@ jobs:
           username: ${{ github.repository_owner }}
           # Shouldn't this be github.GITHUB_TOKEN?
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          # Shouldn't this be github.GITHUB_TOKEN?
+          password: ${{ secrets.DOCKER_HUB }}
       - name: Docker meta
         id: image_builder # you'll use this in the next step
         uses: docker/metadata-action@v4
         with:
           # list of Docker images to use as base name for tags
           images: |
+            ${{ github.repository }}
             ghcr.io/${{ github.repository }}
           # Docker tags based on the following events/attributes
           tags: |
