@@ -47,6 +47,22 @@ do
     done
 done 
 
+if [[ "$@" = "shell" ]]
+then
+    exec "/bin/bash"
+fi
+
+if [[ "$@" = "ping" ]]
+then
+    if [[ ! -z $INVENTORY ]] 
+    then
+        exec "ansible" "-i" "$INVENTORY" "-m" "ping" "all"
+    fi
+
+    exit 1
+fi
+
+
 if [[ -z "$@" ]]
 then
     PLAYBOOK=
