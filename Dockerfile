@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 LABEL maintainer="phish108 <cpglahn@gmail.com>"
 
 # Starting from Ansible Version > 7.1, this will use the dashed number to indicate the container build.
-LABEL version="8.5.0-3"
+LABEL version="8.5.0-4"
 LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
 
 USER root
@@ -43,7 +43,6 @@ RUN apt-get update && \
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY ansible.cfg /etc/ansible/ansible.cfg
-COPY ssh_config /etc/ssh/ssh_config
 
 RUN useradd -m -d /ansible ansible && \
     chown ansible /ansible && \
@@ -52,10 +51,6 @@ RUN useradd -m -d /ansible ansible && \
 WORKDIR /ansible
 
 USER ansible
-
-    # python3 -m pip install --no-cache-dir --upgrade pip && \
-    # python3 -m pip install --no-cache-dir --upgrade setuptools && \
-    # fetch latest version of ansible via pip3 fails for arm platforms
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 

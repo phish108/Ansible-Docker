@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+ANSIBLE_SSH_CONTROL_PATH=/tmp/
+export ANSIBLE_SSH_CONTROL_PATH
+
 # Solution from: https://stackoverflow.com/questions/18880024/start-ssh-agent-on-login
 eval $(ssh-agent | sed 's/^echo/#echo/')
 
@@ -24,6 +27,7 @@ fi
 
 INVENTORY=
 
+# The default location are always possible.
 FILES="/ansible/inventory /ansible/Inventory /ansible/INVENTORY"
 
 if [[ -d /inventory ]]
@@ -33,9 +37,11 @@ then
         ssh-add `find /inventory/keys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
     fi
 
+    # The additional locations are only meaningful if the inventory root dir exists.
     FILES="$FILES /inventory/Inventory /inventory/INVENTORY /inventory/inventory /inventory/MAIN /inventory/Main /inventory/main"
 fi 
 
+# Find an inventory
 for FILE in $FILES
 do
     for EXT in $EXTS
@@ -47,11 +53,13 @@ do
     done
 done 
 
+# Allow to bypass to bash
 if [[ "$@" = "shell" ]]
 then
     exec "/bin/bash"
 fi
 
+# Handle the ping command
 if [[ "$@" = "ping" ]]
 then
     if [[ ! -z $INVENTORY ]] 
@@ -62,7 +70,7 @@ then
     exit 1
 fi
 
-
+# if no parameters are present, try to find a playbook
 if [[ -z "$@" ]]
 then
     PLAYBOOK=
@@ -80,13 +88,14 @@ then
         done
     done
 
-    # if nothing is provided then enter the command line
+    # if nothing is provided then enter the command line and no playbook is present 
+    # go to bash
     if [[ -z $PLAYBOOK ]]
     then
         exec "/bin/bash"
     fi
 
-    # echo call ansible with $INVENTORY and $PLAYBOOK
+    # call ansible with $INVENTORY and $PLAYBOOK
     if [[ -f /ansible/nobecome ]] 
     then
         exec "ansible-playbook" "-i" "$INVENTORY" "$PLAYBOOK"
@@ -95,7 +104,7 @@ then
     exec "ansible-playbook" "-K" "-i" "$INVENTORY" "$PLAYBOOK"
 fi
 
-# In case we have an inventory, we use it 
+# In case there is an inventory, then expect playbook parameters
 if [[ ! -z $INVENTORY ]] 
 then
     if [[ -f /ansible/nobecome ]] 
