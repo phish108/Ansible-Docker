@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-ANSIBLE_SSH_CONTROL_PATH=/tmp/
-export ANSIBLE_SSH_CONTROL_PATH
-
 # Solution from: https://stackoverflow.com/questions/18880024/start-ssh-agent-on-login
 eval $(ssh-agent | sed 's/^echo/#echo/')
 
@@ -25,16 +22,27 @@ then
     ssh-add `find /ansible/keys/* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
 fi
 
+# Default values
 INVENTORY=
+INVENTORYP=
+BECOME="-K"
+PLAYBOOK=
+
+if [[ -f /ansible/nobecome ]] 
+then
+    BECOME=""
+fi
 
 # The default location are always possible.
 FILES="/ansible/inventory /ansible/Inventory /ansible/INVENTORY"
 
 if [[ -d /inventory ]]
 then
+    # Check if private keys are in the inventory directory 
+    # (they should not be, though)
     if [[ -d /inventory/keys ]]
     then
-        ssh-add `find /inventory/keys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
+        ssh-add $(find /inventory/keys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys)
     fi
 
     # The additional locations are only meaningful if the inventory root dir exists.
@@ -48,72 +56,57 @@ do
     do
         if [[ -f "${FILE}.$EXT" ]]
         then
+            INVENTORYP="-i"
             INVENTORY="${FILE}.$EXT"
         fi
     done
 done 
 
-# Allow to bypass to bash
+# Find a playbook
+PB_PREFIX="PLAYBOOK MAIN Playbook Main playbook main"
+
+for FILE in $PB_PREFIX
+do
+    for EXT in $EXTS
+    do
+        if [[ -f "/ansible/${FILE}.${EXT}" ]]
+        then
+            PLAYBOOK="/ansible/${FILE}.${EXT}"
+        fi
+    done
+done
+
+## Bypass Commands
+
+# Bypass to bash on request
 if [[ "$@" = "shell" ]]
 then
     exec "/bin/bash"
 fi
 
-# Handle the ping command
+# Handle the ping command if requested
 if [[ "$@" = "ping" ]]
 then
     if [[ ! -z $INVENTORY ]] 
     then
-        exec "ansible" "-i" "$INVENTORY" "-m" "ping" "all"
+        exec "ansible" $INVENTORYP "$INVENTORY" "-m" "ping" "all"
     fi
 
+    echo "no inventory to ping against"
     exit 1
 fi
 
-# if no parameters are present, try to find a playbook
-if [[ -z "$@" ]]
+if [[ -z "$@" ]] && [[ -z $PLAYBOOK ]]
 then
-    PLAYBOOK=
-
-    PREFIX="PLAYBOOK MAIN Playbook Main playbook main"
-
-    for FILE in $PREFIX
-    do
-        for EXT in $EXTS
-        do
-            if [[ -f "/ansible/${FILE}.${EXT}" ]]
-            then
-                PLAYBOOK="/ansible/${FILE}.${EXT}"
-            fi
-        done
-    done
-
-    # if nothing is provided then enter the command line and no playbook is present 
-    # go to bash
-    if [[ -z $PLAYBOOK ]]
-    then
-        exec "/bin/bash"
-    fi
-
-    # call ansible with $INVENTORY and $PLAYBOOK
-    if [[ -f /ansible/nobecome ]] 
-    then
-        exec "ansible-playbook" "-i" "$INVENTORY" "$PLAYBOOK"
-    fi
-
-    exec "ansible-playbook" "-K" "-i" "$INVENTORY" "$PLAYBOOK"
+    exec "/bin/bash"
 fi
 
-# In case there is an inventory, then expect playbook parameters
-if [[ ! -z $INVENTORY ]] 
-then
-    if [[ -f /ansible/nobecome ]] 
-    then
-        exec "ansible-playbook" "-i" "$INVENTORY" "$@"
-    fi
+## Run Ansible-Playbook
 
-    exec "ansible-playbook" -K -i "$INVENTORY" "$@"
-fi
+[[ ! -z $PLAYBOOK ]] && exec "ansible-playbook" $BECOME $INVENTORYP "$INVENTORY" "$@" $PLAYBOOK
 
-# otherwise run ansible directly
+[[ ! -z $INVENTORY ]] && exec "ansible-playbook" $BECOME $INVENTORYP "$INVENTORY" "$@"
+
+# Otherwise run ansible directly
+
 exec "ansible" "$@"
