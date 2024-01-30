@@ -10,7 +10,7 @@ The container runs natively on intel/amd64 and arm64 (such as Raspberry Pi or Ap
 docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_playbook_inventory}:/ansible \
-    ghcr.io/phish108/ansible-docker:8.5.0-4
+    ghcr.io/phish108/ansible-docker:9.1.0-3
 ```
 
 This assumes that there is a `main.yaml` file in your playbook inventory that contains all relevant information about your play. See Section Autorunning below.
@@ -21,7 +21,7 @@ Sometimes it is usefull to check a connection to the hosts in the inventory. The
 docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_playbook_inventory}:/ansible \
-    ghcr.io/phish108/ansible-docker:8.5.0-4 ping
+    ghcr.io/phish108/ansible-docker:9.1.0-3 ping
 ```
 
 Alternatively for separate inventory-repositories:
@@ -30,7 +30,7 @@ Alternatively for separate inventory-repositories:
 docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_inventory}:/inventory \
-    ghcr.io/phish108/ansible-docker:8.5.0-4 ping
+    ghcr.io/phish108/ansible-docker:9.1.0-3 ping
 ```
 
 For debugging  you can directly enter an `bash` commandline using
@@ -39,7 +39,7 @@ For debugging  you can directly enter an `bash` commandline using
 docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_playbook_inventory}:/ansible \
-    ghcr.io/phish108/ansible-docker:8.5.0-4 shell
+    ghcr.io/phish108/ansible-docker:9.1.0-3 shell
 ```
 
 For more selective playbook control the container passes everything else after the container name as options to the `ansible-playbook command `
@@ -49,7 +49,7 @@ docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_inventory}:/inventory \
     -v ${my_playbooks}:/ansible \
-    ghcr.io/phish108/ansible-docker:8.5.0-4 \
+    ghcr.io/phish108/ansible-docker:9.1.0-3 \
         myplaybook.yml
 ```
 
@@ -60,7 +60,7 @@ docker run -it --rm \
     -v ~/.ssh:/sshkeys \
     -v ${my_inventory}:/inventory \
     -v ${my_playbooks}:/ansible \
-    ghcr.io/phish108/ansible-docker:8.5.0-4 \
+    ghcr.io/phish108/ansible-docker:9.1.0-3 \
         -K myplaybook.yml
 ```
 
@@ -71,8 +71,28 @@ docker run -it --rm \
            -v ~/.ssh:/sshkeys \
            -v ${my_inventory}:/inventory \
            -v ${my_playbooks}:/ansible \
-           ghcr.io/phish108/ansible-docker:8.5.0-4 \
+           ghcr.io/phish108/ansible-docker:9.1.0-3 \
               -l testing myplaybook.yml
+```
+
+In many cases you like to have a docker compose file to avoid all the volumes. 
+
+```DockerCompose
+services: 
+  deploy:
+    image: phish108/ansible:9.1.0-3
+    restart: no
+    volumes:
+      - ./:/ansible
+      - ~/.autossh:/sshkeys
+      - ../deployment-configs:/configs
+      - ../inventory-docker:/inventory
+```
+
+This allows you to run the following command to deploy you playbook.
+
+```
+docker compose run --rm deploy
 ```
 
 ### Finding your system inventory
@@ -103,7 +123,7 @@ The container always includes ``inventory.yaml`` or ``/inventory/main.yaml``, if
 docker run -it --rm \
            -v ~/.ssh:/sshkeys \
            -v ${my_inventory}:/ansible \
-           ghcr.io/phish108/ansible-docker:8.5.0-4  \
+           ghcr.io/phish108/ansible-docker:9.1.0-3  \
                myplaybook.yml myotherplaybook.yml
 ```
 
@@ -113,12 +133,12 @@ If `/ansible/main.yaml` or `/ansible/playbook.yaml` are present, then the contai
 docker run -it --rm \
            -v ~/.ssh:/sshkeys \
            -v ${my_inventory}:/ansible \
-           ghcr.io/phish108/ansible-docker:8.5.0-4
+           ghcr.io/phish108/ansible-docker:9.1.0-3
 ```
 
 When both files exists, then the container always uses `/ansible/main.yaml`.
 
-***IMPORTANT*** When autorunning, then it is not possible to pass extra parameters. 
+***IMPORTANT*** When autorunning not all ansible parameters are supported. 
 
 #### Avoid become password interaction
 
