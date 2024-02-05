@@ -1,4 +1,4 @@
-ansible==9.1.0
+ansible==9.2.0
 PyYAML==6.0.1
 # needed for JsonPath queries
 jmespath==1.0.1
