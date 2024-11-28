@@ -1,9 +1,9 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 LABEL maintainer="phish108 <cpglahn@gmail.com>"
 
-# Starting from Ansible Version > 7.1, this will use the dashed number to indicate the container build.
-LABEL version="8.5.0-4"
+# Starting from Ansible Version > 7.1, this will use the dashed number to indicate the image build.
+LABEL version="11.0.0-2"
 LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
 
 USER root
