@@ -40,7 +40,7 @@ RUN apt-get update && \
     && \
     mkdir -p /ansible /etc/ansible /tmp/ssh/ && \
     # run pip and to install the ansible and its dependencies
-    pip --no-cache-dir install -r /tmp/requirements.txt && \
+    pip3 --no-cache-dir install -r /tmp/requirements.txt && \
     rm -f /tmp/requirements.txt
 
 COPY docker-entrypoint.sh /usr/local/bin/
