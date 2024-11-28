@@ -1,9 +1,11 @@
 FROM ubuntu:24.04
 
+# Starting from Ansible Version > 7.1, this will use the dashed number to indicate the image build.
+ARG VERSION_TAG=11.0.0-2
+
 LABEL maintainer="phish108 <cpglahn@gmail.com>"
 
-# Starting from Ansible Version > 7.1, this will use the dashed number to indicate the image build.
-LABEL version="11.0.0-2"
+LABEL version=$VERSION_TAG
 LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
 
 USER root
