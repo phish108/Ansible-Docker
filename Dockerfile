@@ -6,7 +6,7 @@ ARG VERSION_TAG=11.0.0-2
 LABEL maintainer="phish108 <cpglahn@gmail.com>"
 
 LABEL version=$VERSION_TAG
-LABEL org.opencontainers.image.source https://github.com/phish108/Ansible-Docker
+LABEL org.opencontainers.image.source=https://github.com/phish108/Ansible-Docker
 
 USER root
 

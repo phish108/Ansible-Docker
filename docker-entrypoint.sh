@@ -6,21 +6,21 @@ eval $(ssh-agent | sed 's/^echo/#echo/')
 
 EXTS="YML YAML yml yaml"
 
-# automatically include any private keys that are provided in special volumes
-if [[ -d /sshkeys ]]
-then
-    ssh-add `find /sshkeys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
-fi
+KEYPATH=""
 
-if [[ -d /keys ]]
-then
-    ssh-add `find /keys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
-fi
-
-if [[ -d /ansible/keys ]]
-then
-    ssh-add `find /ansible/keys/* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys`
-fi
+# check for ssh keys in preset paths, first match wins
+for tempKEYPATH in "/sshkeys" "/keys" "/ansible/keys"
+do
+    if [[ -d $tempKEYPATH ]]
+    then
+        if [[ -z $KEYPATH ]]
+        then
+            KEYPATH="$tempKEYPATH"
+        else
+            echo "Warning: Multiple key paths found, using $KEYPATH and ignoring $tempKEYPATH"
+        fi
+    fi
+done
 
 # Default values
 INVENTORY=
@@ -42,12 +42,22 @@ then
     # (they should not be, though)
     if [[ -d /inventory/keys ]]
     then
-        ssh-add $(find /inventory/keys/id_* ! -name config ! -name *.pub ! -name known_hosts ! -name authorized_keys)
+        echo "Force use ssh keys from /inventory/keys" 
+        KEYPATH="/inventory/keys"
     fi
 
     # The additional locations are only meaningful if the inventory root dir exists.
     FILES="$FILES /inventory/Inventory /inventory/INVENTORY /inventory/inventory /inventory/MAIN /inventory/Main /inventory/main"
 fi 
+
+if [[ -z $KEYPATH ]]
+then
+    echo "No ssh-keys path found, not adding any keys."
+    echo "If you want to add private ssh keys, mount them to /sshkeys or /keys"
+else
+    echo "Adding ssh keys from $KEYPATH"
+    ssh-add $(find ${KEYPATH}/* ! -name config ! -name '*.pub' ! -name known_hosts ! -name authorized_keys)
+fi
 
 # Find an inventory
 for FILE in $FILES
@@ -78,9 +88,9 @@ done
 
 ## Bypass Commands
 
-# Bypass to bash on request
-if [[ "$@" = "shell" ]]
-then
+# Bypass to bash on request (usefull for debugging)
+if [[ "$@" = "shell" ]] || [[ "$@" = "bash" ]] || [[ "$@" = "sh" ]] || [[ "$@" = "/bin/bash" ]] || [[ "$@" = "/bin/sh" ]]  
+then 
     exec "/bin/bash"
 fi
 
@@ -96,10 +106,8 @@ then
     exit 1
 fi
 
-if [[ -z "$@" ]] && [[ -z $PLAYBOOK ]]
-then
-    exec "/bin/bash"
-fi
+# If no arguments are given, and no playbook is found, open a bash shell
+[[ -z "$@" ]] && [[ -z $PLAYBOOK ]] && exec "/bin/bash"
 
 ## Run Ansible-Playbook
 
@@ -107,6 +115,5 @@ fi
 
 [[ ! -z $INVENTORY ]] && exec "ansible-playbook" $BECOME $INVENTORYP "$INVENTORY" "$@"
 
-# Otherwise run ansible directly
-
+# Otherwise run ansible directly with the given arguments
 exec "ansible" "$@"
