@@ -84,7 +84,7 @@ services:
     restart: no
     volumes:
       - ./:/ansible
-      - ~/.autossh:/sshkeys
+      - ~/.ssh:/keys
       - ../deployment-configs:/configs
       - ../inventory-docker:/inventory
 ```
