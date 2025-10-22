@@ -4,6 +4,6 @@ PyYAML==6.0.2
 jmespath==1.0.1
 # Helpers for password hashing filters 
 passlib==1.7.4
-bcrypt==4.3.0
+bcrypt==5.0.0
 argon2-cffi==25.1.0
 cryptography==46.0.1
