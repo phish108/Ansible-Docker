@@ -56,7 +56,7 @@ then
     echo "If you want to add private ssh keys, mount them to /sshkeys or /keys"
 else
     echo "Adding ssh keys from $KEYPATH"
-    ssh-add $(find ${KEYPATH}/* ! -name config ! -name '*.pub' ! -name known_hosts ! -name authorized_keys)
+    ssh-add $(find ${KEYPATH}/* ! -name config ! -name '*.pub' ! -name known_hosts ! -name authorized_keys ! -name *.old ! -name .* )
 fi
 
 # Find an inventory
