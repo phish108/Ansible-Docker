@@ -6,4 +6,4 @@ jmespath==1.1.0
 passlib==1.7.4
 bcrypt==5.0.0
 argon2-cffi==25.1.0
-cryptography==46.0.5
+cryptography==50.0.1
